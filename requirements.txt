@@ -1,3 +1,3 @@
-clarifai==9.11.0
-streamlit==1.24.0
+clarifai
+streamlit
 opencv-python-headless
