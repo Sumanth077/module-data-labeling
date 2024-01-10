@@ -1,13 +1,11 @@
 import streamlit as st
 import os
-from clarifai.modules.css import ClarifaiStreamlitCSS
 from clarifai.client.model import Model
 import cv2
 from urllib.request import urlopen
 import numpy as np
 
 st.set_page_config(layout="wide")
-ClarifaiStreamlitCSS.insert_default_css(st)
 
 st.title("Data Labeling using General Object Detection Model and GPT4 Vision")
 
