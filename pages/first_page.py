@@ -2,9 +2,9 @@ import streamlit as st
 import os
 from clarifai.modules.css import ClarifaiStreamlitCSS
 from clarifai.client.model import Model
-import cv2
-from urllib.request import urlopen
-import numpy as np
+from io import BytesIO
+import requests
+from PIL import Image, ImageDraw, ImageFont
 
 st.set_page_config(layout="wide")
 ClarifaiStreamlitCSS.insert_default_css(st)
@@ -35,9 +35,14 @@ def main():
         classes = ['Ferrari 812', 'Volkswagen Beetle', 'BMW M5', 'Honda Civic']
         threshold = 0.99
 
-        req = urlopen(IMAGE_URL)
-        arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
-        img = cv2.imdecode(arr, -1)  # 'Load it as it is'
+        # req = urlopen(IMAGE_URL)
+        # arr = np.asarray(bytearray(req.read()), dtype=np.uint8)
+        # img = cv2.imdecode(arr, -1)  # 'Load it as it is'
+
+        response = requests.get(IMAGE_URL)
+        img = Image.open(BytesIO(response.content))
+
+        draw = ImageDraw.Draw(img)
 
         for region in regions:
             # Accessing and rounding the bounding box values
@@ -60,16 +65,17 @@ def main():
 
                 if value > threshold:
                     # Multipy by axis
-                    top_row = top_row * img.shape[0]
-                    left_col = left_col * img.shape[1]
-                    bottom_row = bottom_row * img.shape[0]
-                    right_col = right_col * img.shape[1]
+                    top_row = top_row * img.height
+                    left_col = left_col * img.width
+                    bottom_row = bottom_row * img.height
+                    right_col = right_col * img.width
 
-                    cv2.rectangle(img, (int(left_col), int(top_row)), (int(right_col), int(bottom_row)), (36, 255, 12), 2)
+                    draw.rectangle([(int(left_col), int(top_row)), (int(right_col), int(bottom_row))],
+                                   outline=(36, 255, 12), width=2)
 
                     # Display text
-                    cv2.putText(img, concept_name, (int(left_col), int(top_row - 10)), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
-                                    (36, 255, 12), 2)
+                    font = ImageFont.load_default()
+                    draw.text((int(left_col), int(top_row - 10)), concept_name, font=font, fill=(36, 255, 12))
 
         st.image(img, caption='Image with Label', channels='BGR', use_column_width=True)
 
