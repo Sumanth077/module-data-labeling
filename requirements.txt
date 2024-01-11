@@ -1,3 +1,4 @@
 clarifai
 streamlit
-opencv-python-headless
+Pillow
+requests
