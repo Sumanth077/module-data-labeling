@@ -75,7 +75,7 @@ def main():
 
                     # Display text
                     font = ImageFont.load_default()
-                    draw.text((int(left_col), int(top_row - 10)), concept_name, font=font, fill=(36, 255, 12))
+                    draw.text((int(left_col), int(top_row - 15)), concept_name, font=font, fill=(36, 255, 12))
 
         st.image(img, caption='Image with Label', channels='BGR', use_column_width=True)
 
