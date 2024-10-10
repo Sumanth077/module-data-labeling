@@ -1,2 +1,2 @@
-# Data Labeling using GPT-4 Vision
+# Data Labeling using Llama 3.2 Vision Instruct
 
